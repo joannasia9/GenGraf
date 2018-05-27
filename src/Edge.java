@@ -1,7 +1,7 @@
 public class Edge implements Comparable<Edge> {
-    private final int startVertex;
-    private final int endVertex;
-    private final long weight;
+    public final int startVertex;
+    public final int endVertex;
+    public final long weight;
 
     public Edge(int v, int w, int weight) {
         this.startVertex = v;
@@ -38,12 +38,13 @@ public class Edge implements Comparable<Edge> {
 
     @Override
     public int compareTo(Edge arg) {
-        if (getWeight() < arg.getWeight()) {
+        return (int)(weight - arg.weight);
+        /*if (getWeight() < arg.getWeight()) {
             return -1;
         } else if (getWeight() > arg.getWeight()) {
             return 1;
         }
-        return 0;
+        return 0;*/
     }
 
     public long getEndV() {

@@ -1,8 +1,9 @@
+import java.text.DecimalFormat;
 import java.util.*;
 
 public class GraphGenerator {
     private Random rand;
-    private int MAX_RANGE_WEIGHT = 10;
+    private int MAX_RANGE_WEIGHT = 233;
     private int[][] graph;
     private int addedEdges = 0;
 
@@ -28,20 +29,26 @@ public class GraphGenerator {
     private int[][] createSpecifiedGraph(int vertices, int edges) {
 
         int[][] g = new int[vertices][vertices];
+        for(int i = 0; i<vertices; i++){
+            for(int j=0;j<vertices;j++) g[i][j] =0;
+        }
         //generate connections i && i+1
         for (int i = 0; i < vertices; i++) {
             int weight = rand.nextInt(MAX_RANGE_WEIGHT)+1;
             addEdge(g,i,weight,vertices);
-            //g.addEdge(new Edge(i, (i + 1) % vertices, weight));
         }
 
         createRestConnections(g, edges, vertices);
 
+        double d = (double)edges/(double)(vertices*(vertices-1)/2);
+        System.out.println("WYGENEROWANO GRAF O "+ vertices + " WIERZCHOŁKACH I "+ countEdges(g) + " KRAWĘDZIACH");
+        DecimalFormat formatter = new DecimalFormat("#0.000");
+        System.out.println("GĘSTOŚĆ WYGENEROWANEGO GRAFU: DG = "+ formatter.format(d));
         return g;
     }
 
-    private boolean containsEdge(int i, int j){
-        return ((graph[i][j]>0)||(graph[j][i]>0));
+    private boolean containsEdge(int[][] g, int i, int j){
+        return ((g[i][j]>0)||(g[j][i]>0));
     }
 
     private void addEdge(int[][] g, int i, int weight, int vertices){
@@ -59,7 +66,7 @@ public class GraphGenerator {
             while (addedEdges < howManyEdges) {
                 for (int i = 0; i < v; i++) {
                     int toConnect = rand.nextInt(v);
-                    if (addedEdges < howManyEdges && !containsEdge(i, toConnect))
+                    if (addedEdges < howManyEdges && !containsEdge(g,i, toConnect))
                         addEdge(g,i,toConnect,rand);
                 }
             }
@@ -79,7 +86,8 @@ public class GraphGenerator {
 
         float d = countEdges(g)/(vertices*(vertices-1)/2);
         System.out.println("WYGENEROWANO GRAF O "+ vertices + " WIERZCHOŁKACH I "+ countEdges(g) + " KRAWĘDZIACH");
-        System.out.println("GĘSTOŚĆ WYGENEROWANEGO GRAFU: DG = "+ d);
+        DecimalFormat formatter = new DecimalFormat("#0.000");
+        System.out.println("GĘSTOŚĆ WYGENEROWANEGO GRAFU: DG = "+ formatter.format(d));
 
         return g;
     }

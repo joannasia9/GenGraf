@@ -1,5 +1,6 @@
 import java.util.*;
 import java.lang.*;
+import java.util.concurrent.TimeUnit;
 
 public class KruskalAlgorithm {
     private long time = 0;
@@ -75,7 +76,7 @@ public class KruskalAlgorithm {
         void KruskalMST()
         { weight = 0;
 
-            long timeStartK = System.currentTimeMillis();
+            long timeStartK = TimeUnit.MILLISECONDS.toMicros(System.currentTimeMillis());
 
             result = new EdgeK[V];  // wynik
             int e = 0;
@@ -115,7 +116,7 @@ public class KruskalAlgorithm {
                 }
             }
 
-            long timeStopK = System.currentTimeMillis();
+            long timeStopK = TimeUnit.MILLISECONDS.toMicros(System.currentTimeMillis());
 
             time += timeStopK-timeStartK;
             // print the contents of result[] to display
@@ -125,7 +126,7 @@ public class KruskalAlgorithm {
         }
 
         public void  showTime(int iterations){
-            System.out.println("CZAS WYKONYWANIA ALGORYTMU KRUSKALA WYNIÓSŁ: "+ (time/iterations) + " milisekund");
+            System.out.println("CZAS WYKONYWANIA ALGORYTMU KRUSKALA WYNIÓSŁ: "+ (time/iterations) + " mikrosekund");
             System.out.println("SUMA WAG: " + weight);
             //showResults(result);
         }

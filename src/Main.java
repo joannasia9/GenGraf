@@ -86,12 +86,13 @@ public class Main {
 
         goPrim.addActionListener(e -> {
             //Alg. Prima
+            ArrayList<Edge> uniqueEdges = graphGenerator.getAllUniqueEdges(graph);
             prim = new Prim(graph);
 
-            for(int j = 0; j<1000;j++){
+            for(int j = 0; j<50;j++){
                 prim.primMST();
             }
-            prim.showTime(1000);
+            prim.showTime(50);
         });
 
         goKruskal.addActionListener(e -> {
@@ -99,10 +100,10 @@ public class Main {
             KruskalAlgorithm kruskal = new KruskalAlgorithm(graph.length, uniqueEdges.size());
             kruskal.setEdgeArray(uniqueEdges);
 
-            for(int j = 0; j<1000;j++){
+            for(int j = 0; j<50;j++){
                 kruskal.KruskalMST();
             }
-            kruskal.showTime(1000);
+            kruskal.showTime(50);
         });
 
         panel.add(titleStep1);
