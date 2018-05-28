@@ -8,6 +8,7 @@ public class Main {
     private static int[][] graph;
     private static Prim prim;
     private static GraphGenerator graphGenerator;
+    private static int ITERATIONS_COUNT = 100;
 
     public static void main(String[] args){
         Font titleFont = new Font("TimesRoman", Font.BOLD, 16);
@@ -77,6 +78,73 @@ public class Main {
             }
         });
 
+        ArrayList<TestData> testInput = new ArrayList();
+        testInput.add(new TestData(10, 18));
+        testInput.add(new TestData(10, 27));
+        testInput.add(new TestData(10, 36));
+        testInput.add(new TestData(10, 45));
+        testInput.add(new TestData(50, 245));
+        testInput.add(new TestData(50, 490));
+        testInput.add(new TestData(50, 735));
+        testInput.add(new TestData(50, 980));
+        testInput.add(new TestData(50, 1225));
+        testInput.add(new TestData(100, 990));
+        testInput.add(new TestData(100, 1980));
+        testInput.add(new TestData(100, 2970));
+        testInput.add(new TestData(100, 3960));
+        testInput.add(new TestData(100, 4950));
+        testInput.add(new TestData(500, 24950));
+        testInput.add(new TestData(500, 49900));
+        testInput.add(new TestData(500, 74850));
+        testInput.add(new TestData(500, 99800));
+        testInput.add(new TestData(500, 124750));
+        testInput.add(new TestData(1000, 99900));
+        testInput.add(new TestData(1000, 199800));
+        testInput.add(new TestData(1000, 299700));
+        testInput.add(new TestData(1000, 399600));
+        testInput.add(new TestData(1000, 499500));
+        testInput.add(new TestData(5000, 2499500));
+        testInput.add(new TestData(5000, 4999000));
+        testInput.add(new TestData(5000, 7498500));
+        testInput.add(new TestData(5000, 9998000));
+        testInput.add(new TestData(5000, 12497500));
+        testInput.add(new TestData(10000, 9999000));
+        testInput.add(new TestData(10000, 19998000));
+        testInput.add(new TestData(10000, 29997000));
+        testInput.add(new TestData(10000, 39996000));
+        testInput.add(new TestData(10000, 49995000));
+        testInput.add(new TestData(20000, 39998000));
+        testInput.add(new TestData(20000, 79996000));
+        testInput.add(new TestData(20000, 119994000));
+        testInput.add(new TestData(20000, 159992000));
+        testInput.add(new TestData(20000, 199990000));
+
+        for (TestData input : testInput) {
+            System.out.println("\n\n ------- Results for " + input.vertices + " vx and " + input.edges + " eg");
+
+            graphGenerator = new GraphGenerator();
+            graphGenerator.generateGraph(0, input.vertices, input.edges);
+            graph = graphGenerator.getGraph();
+
+            prim = new Prim(graphGenerator.getPrimVertices(graph));
+
+            for(int j = 0; j<ITERATIONS_COUNT;j++){
+                prim.primMST();
+            }
+            prim.showTime(ITERATIONS_COUNT);
+
+            ArrayList<Edge> uniqueEdges = graphGenerator.getAllUniqueEdges(graph);
+            KruskalAlgorithm kruskal = new KruskalAlgorithm(graph.length, uniqueEdges.size());
+            kruskal.setEdgeArray(uniqueEdges);
+
+            for(int j = 0; j<ITERATIONS_COUNT;j++){
+                kruskal.KruskalMST();
+            }
+            kruskal.showTime(ITERATIONS_COUNT);
+        }
+
+
+
         JButton goPrim = new JButton("Uruchom algorytm Prima");
         goPrim.setFont(restFont);
         goPrim.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -86,13 +154,12 @@ public class Main {
 
         goPrim.addActionListener(e -> {
             //Alg. Prima
-            ArrayList<Edge> uniqueEdges = graphGenerator.getAllUniqueEdges(graph);
-            prim = new Prim(graph);
+            prim = new Prim(graphGenerator.getPrimVertices(graph));
 
-            for(int j = 0; j<50;j++){
+            for(int j = 0; j<ITERATIONS_COUNT;j++){
                 prim.primMST();
             }
-            prim.showTime(50);
+            prim.showTime(ITERATIONS_COUNT);
         });
 
         goKruskal.addActionListener(e -> {
@@ -100,10 +167,10 @@ public class Main {
             KruskalAlgorithm kruskal = new KruskalAlgorithm(graph.length, uniqueEdges.size());
             kruskal.setEdgeArray(uniqueEdges);
 
-            for(int j = 0; j<50;j++){
+            for(int j = 0; j<ITERATIONS_COUNT;j++){
                 kruskal.KruskalMST();
             }
-            kruskal.showTime(50);
+            kruskal.showTime(ITERATIONS_COUNT);
         });
 
         panel.add(titleStep1);

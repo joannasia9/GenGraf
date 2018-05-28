@@ -3,7 +3,7 @@ import java.util.*;
 
 public class GraphGenerator {
     private Random rand;
-    private int MAX_RANGE_WEIGHT = 233;
+    private int MAX_RANGE_WEIGHT = 12;
     private int[][] graph;
     private int addedEdges = 0;
 
@@ -115,5 +115,23 @@ private int countEdges( int[][] g){
         return edges;
     }
 
-}
+    public PrimVertex[] getPrimVertices(int[][] graph) {
+        PrimVertex[] vertices = new PrimVertex[graph.length];
 
+        for (int i = 0; i < graph.length; ++i) {
+            vertices[i] = new PrimVertex();
+        }
+
+        for (int i = 0; i < graph.length; ++i) {
+            for (int j = i + 1; j < graph.length; ++j) {
+                if (graph[i][j] > 0) {
+                    vertices[i].neighbors.add(new PrimEdge(j, graph[i][j]));
+                    vertices[j].neighbors.add(new PrimEdge(i, graph[i][j]));
+                }
+            }
+        }
+
+        return vertices;
+    }
+
+}

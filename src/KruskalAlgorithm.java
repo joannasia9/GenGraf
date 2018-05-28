@@ -21,6 +21,7 @@ public class KruskalAlgorithm {
         };
 
         int V, E;
+        EdgeK originalEdge[];
         EdgeK edge[];
 
         KruskalAlgorithm(int v, int e)
@@ -40,6 +41,8 @@ public class KruskalAlgorithm {
             edge[i].weight = (int) item.getWeight();
             i++;
         }
+
+        originalEdge = edge.clone();
     }
 
     // znajduje subset z danym wierzchołkiem
@@ -76,6 +79,8 @@ public class KruskalAlgorithm {
         void KruskalMST()
         { weight = 0;
 
+            edge = originalEdge.clone();
+
             long timeStartK = TimeUnit.MILLISECONDS.toMicros(System.currentTimeMillis());
 
             result = new EdgeK[V];  // wynik
@@ -85,7 +90,7 @@ public class KruskalAlgorithm {
                 result[i] = new EdgeK();
 
             // Sortuje krawedzie niemalejąco
-            Arrays.sort(edge);
+            Arrays.sort(edge);;
 
             subset subsets[] = new subset[V];
             for(int i=0; i<V; ++i)
