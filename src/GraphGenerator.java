@@ -6,6 +6,7 @@ public class GraphGenerator {
     private int MAX_RANGE_WEIGHT = 12;
     private int[][] graph;
     private int addedEdges = 0;
+    private OnFinishedListener onFinishedListener;
 
     public int[][] getGraph() {
         return graph;
@@ -41,9 +42,13 @@ public class GraphGenerator {
         createRestConnections(g, edges, vertices);
 
         double d = (double)edges/(double)(vertices*(vertices-1)/2);
+
         System.out.println("WYGENEROWANO GRAF O "+ vertices + " WIERZCHOŁKACH I "+ countEdges(g) + " KRAWĘDZIACH");
         DecimalFormat formatter = new DecimalFormat("#0.000");
         System.out.println("GĘSTOŚĆ WYGENEROWANEGO GRAFU: DG = "+ formatter.format(d));
+        String res = "Wygenerowano graf o "+ vertices + " wierzchołkach oraz "+ countEdges(g) + " krawędziach";
+        String res1 = "Gęstość wygenerowanego grafu: D = "+ formatter.format(d);
+        onFinishedListener.onFinished(res,res1);
         return g;
     }
 
@@ -85,9 +90,13 @@ public class GraphGenerator {
         }
 
         float d = countEdges(g)/(vertices*(vertices-1)/2);
+
         System.out.println("WYGENEROWANO GRAF O "+ vertices + " WIERZCHOŁKACH I "+ countEdges(g) + " KRAWĘDZIACH");
         DecimalFormat formatter = new DecimalFormat("#0.000");
         System.out.println("GĘSTOŚĆ WYGENEROWANEGO GRAFU: DG = "+ formatter.format(d));
+        String res = "Wygenerowano graf o "+ vertices + " wierzchołkach oraz "+ countEdges(g) + " krawędziach";
+        String res1 = "Gęstość wygenerowanego grafu: D = "+ formatter.format(d);
+        onFinishedListener.onFinished(res,res1);
 
         return g;
     }
@@ -125,8 +134,8 @@ private int countEdges( int[][] g){
         for (int i = 0; i < graph.length; ++i) {
             for (int j = i + 1; j < graph.length; ++j) {
                 if (graph[i][j] > 0) {
-                    vertices[i].neighbors.add(new PrimEdge(j, graph[i][j]));
-                    vertices[j].neighbors.add(new PrimEdge(i, graph[i][j]));
+                    vertices[i].neighbors.add(new PrimEdge(i, j, graph[i][j]));
+                    vertices[j].neighbors.add(new PrimEdge(j, i, graph[i][j]));
                 }
             }
         }
@@ -134,4 +143,7 @@ private int countEdges( int[][] g){
         return vertices;
     }
 
+    public void setOnFinishedListener(OnFinishedListener onFinishedListener) {
+        this.onFinishedListener = onFinishedListener;
+    }
 }

@@ -1,9 +1,11 @@
+import javax.swing.*;
 import java.util.*;
 import java.lang.*;
 import java.util.concurrent.TimeUnit;
 
 public class KruskalAlgorithm {
     private long time = 0;
+    private OnFinishedListener onFinishedListener;
 
         class EdgeK implements Comparable<EdgeK>
         {
@@ -131,12 +133,18 @@ public class KruskalAlgorithm {
         }
 
         public void  showTime(int iterations){
+            String t = "Czas wykonania algorytmu KRUSKALA wynósł: \n"+ (time/iterations) + " mikrosekund.\n";
+            String w = "Suma wag: " + weight;
             System.out.println("CZAS WYKONYWANIA ALGORYTMU KRUSKALA WYNIÓSŁ: "+ (time/iterations) + " mikrosekund");
             System.out.println("SUMA WAG: " + weight);
-            //showResults(result);
+            onFinishedListener.onFinished(t, w);
+            showResults(result);
         }
 
         private void showResults(EdgeK[] results) {
+            JDialog dialog = new JDialog();
+
+
             System.out.println("Na MST skladaja się nastepujace krawedzie:");
 
             for (EdgeK item : results) {
@@ -146,4 +154,7 @@ public class KruskalAlgorithm {
 
         }
 
+    public void setOnFinishedListener(OnFinishedListener onFinishedListener) {
+        this.onFinishedListener = onFinishedListener;
+    }
 }

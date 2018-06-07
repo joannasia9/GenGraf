@@ -8,6 +8,7 @@ public class Prim {
     private long weight;
     private long time;
     private PrimVertex[] vertices;
+    private OnFinishedListener onFinishedListener;
 
 
     public Prim(PrimVertex[] vertices) {
@@ -20,7 +21,6 @@ public class Prim {
         minSpanningTree = new ArrayDeque<>();
         adjacencyEdges = new PriorityQueue<>(vertices.length);
         long timeStart = TimeUnit.MILLISECONDS.toMicros(System.currentTimeMillis());
-
 
         Random rand = new Random();
         int randV = rand.nextInt(vertices.length - 1);
@@ -53,24 +53,29 @@ public class Prim {
     }
 
     public void showTime(int iterations){
+        String t = "Czas wykonania algorytmu PRIMA wyniósł: "+ (time/iterations) + " mikrosekund\n";
+        String w = "Suma wag: " + weight;
         System.out.println("CZAS WYKONYWANIA ALGORYTMU PRIMA WYNIÓSŁ: "+ (time/iterations) + " mikrosekund");
         System.out.println("SUMA WAG: " + weight);
-//        System.out.println("Na MST składają się nastepujące krawędzie: ");
-//        System.out.println(mstEdges(edges()));
+        onFinishedListener.onFinished(t,w);
+        System.out.println("Na MST składają się nastepujące krawędzie: ");
+        System.out.println(showMST(minSpanningTree));
     }
 
-    private String mstEdges(Iterable<Edge> edges){
+    private String showMST(Deque<PrimEdge> tree){
         StringBuilder builder = new StringBuilder();
-
-        for (Edge item : edges) {
-            builder.append(item).append("\n");
+        while(!tree.isEmpty()){
+            PrimEdge edge = tree.pop();
+            builder.append(edge.start).append(" -> ")
+                    .append(edge.end).append(": ")
+                    .append(edge.cost)
+                    .append("\n");
         }
 
         return builder.toString();
     }
 
-    /*public Iterable<Edge> edges() {
-        return minSpanningTree;
-    }*/
-
+    public void setOnFinishedListener(OnFinishedListener onFinishedListener) {
+        this.onFinishedListener = onFinishedListener;
+    }
 }

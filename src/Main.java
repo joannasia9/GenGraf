@@ -1,27 +1,40 @@
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
-public class Main {
+    public class Main {
 
     private static int[][] graph;
     private static Prim prim;
     private static GraphGenerator graphGenerator;
     private static int ITERATIONS_COUNT = 100;
+    private static JLabel resultLabel, wLabel;
+    private static OnFinishedListener onFinishedListener = new OnFinishedListener() {
+        @Override
+        public void onFinished(String t, String w) {
+            resultLabel.setText(t);
+            wLabel.setText(w);
+        }
+    };
 
     public static void main(String[] args){
+
         Font titleFont = new Font("TimesRoman", Font.BOLD, 16);
         Font restFont = new Font("TimesRoman", Font.PLAIN, 12);
 
+
+
         JFrame frame = new JFrame("Projekt GIS");
+        frame.setResizable(false);
 
         JPanel mainPanel = new JPanel(new GridBagLayout());
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         mainPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Badanie algorytmów MST"));
-        mainPanel.setPreferredSize(new Dimension());
+        mainPanel.setPreferredSize(new Dimension(420,420));
         mainPanel.setBounds(10,10,400,400);
 
         JLabel titleStep1 = new JLabel("1. WYGENERUJ GRAF");
@@ -44,12 +57,13 @@ public class Main {
         JLabel empty1 = new JLabel(" ");
         empty1.setMaximumSize(new Dimension(100,30));
 
-        JLabel provideEdgesNum = new JLabel("Podaj liczbę E krawędzi grafu", SwingConstants.LEFT);
+        JLabel provideEdgesNum = new JLabel("Podaj liczbę E krawędzi grafu (min E = V)", SwingConstants.LEFT);
         provideEdgesNum.setFont(restFont);
         provideEdgesNum.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JTextField edgesValue = new JTextField(10);
         edgesValue.setAlignmentX(Component.CENTER_ALIGNMENT);
+
 
         JButton generateBtn = new JButton("Generuj graf o V wierz. i E kraw.");
         generateBtn.setFont(restFont);
@@ -60,90 +74,39 @@ public class Main {
         generateBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         generateCompleteBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+
         generateBtn.addActionListener((ActionEvent e) -> {
-            if(!vertValue.getText().equals("")&&!edgesValue.getText().equals("")) {
-                int verticesValue = Integer.parseInt(vertValue.getText());
-                graphGenerator = new GraphGenerator();
-                String edges = edgesValue.getText().trim();
-                graphGenerator.generateGraph(0, verticesValue, Integer.parseInt(edges));
-                graph = graphGenerator.getGraph();
+            if(!vertValue.getText().equals("")){
+                provideNodesNum.setForeground(Color.BLACK);
+                if(!edgesValue.getText().equals("")) {
+                    provideEdgesNum.setForeground(Color.BLACK);
+                    int verticesValue = Integer.parseInt(vertValue.getText());
+                    graphGenerator = new GraphGenerator();
+                    graphGenerator.setOnFinishedListener(onFinishedListener);
+                    String edges = edgesValue.getText().trim();
+                    graphGenerator.generateGraph(0, verticesValue, Integer.parseInt(edges));
+                    graph = graphGenerator.getGraph();
+                } else provideEdgesNum.setForeground(Color.RED);
+            }else provideNodesNum.setForeground(Color.RED);
+
+            if(graph!=null){
+                titleStep1.setForeground(Color.BLACK);
             }
+
         });
         generateCompleteBtn.addActionListener((ActionEvent e) -> {
             if(!vertValue.getText().equals("")) {
+                provideNodesNum.setForeground(Color.BLACK);
                 int verticesValue = Integer.parseInt(vertValue.getText());
                 graphGenerator = new GraphGenerator();
+                graphGenerator.setOnFinishedListener(onFinishedListener);
                 graphGenerator.generateGraph(1,verticesValue,0);
                 graph = graphGenerator.getGraph();
+            } else provideNodesNum.setForeground(Color.RED);
+            if(graph!=null){
+                titleStep1.setForeground(Color.BLACK);
             }
         });
-
-        ArrayList<TestData> testInput = new ArrayList();
-        testInput.add(new TestData(10, 18));
-        testInput.add(new TestData(10, 27));
-        testInput.add(new TestData(10, 36));
-        testInput.add(new TestData(10, 45));
-        testInput.add(new TestData(50, 245));
-        testInput.add(new TestData(50, 490));
-        testInput.add(new TestData(50, 735));
-        testInput.add(new TestData(50, 980));
-        testInput.add(new TestData(50, 1225));
-        testInput.add(new TestData(100, 990));
-        testInput.add(new TestData(100, 1980));
-        testInput.add(new TestData(100, 2970));
-        testInput.add(new TestData(100, 3960));
-        testInput.add(new TestData(100, 4950));
-        testInput.add(new TestData(500, 24950));
-        testInput.add(new TestData(500, 49900));
-        testInput.add(new TestData(500, 74850));
-        testInput.add(new TestData(500, 99800));
-        testInput.add(new TestData(500, 124750));
-        testInput.add(new TestData(1000, 99900));
-        testInput.add(new TestData(1000, 199800));
-        testInput.add(new TestData(1000, 299700));
-        testInput.add(new TestData(1000, 399600));
-        testInput.add(new TestData(1000, 499500));
-        testInput.add(new TestData(5000, 2499500));
-        testInput.add(new TestData(5000, 4999000));
-        testInput.add(new TestData(5000, 7498500));
-        testInput.add(new TestData(5000, 9998000));
-        testInput.add(new TestData(5000, 12497500));
-        testInput.add(new TestData(10000, 9999000));
-        testInput.add(new TestData(10000, 19998000));
-        testInput.add(new TestData(10000, 29997000));
-        testInput.add(new TestData(10000, 39996000));
-        testInput.add(new TestData(10000, 49995000));
-        testInput.add(new TestData(20000, 39998000));
-        testInput.add(new TestData(20000, 79996000));
-        testInput.add(new TestData(20000, 119994000));
-        testInput.add(new TestData(20000, 159992000));
-        testInput.add(new TestData(20000, 199990000));
-
-        for (TestData input : testInput) {
-            System.out.println("\n\n ------- Results for " + input.vertices + " vx and " + input.edges + " eg");
-
-            graphGenerator = new GraphGenerator();
-            graphGenerator.generateGraph(0, input.vertices, input.edges);
-            graph = graphGenerator.getGraph();
-
-            prim = new Prim(graphGenerator.getPrimVertices(graph));
-
-            for(int j = 0; j<ITERATIONS_COUNT;j++){
-                prim.primMST();
-            }
-            prim.showTime(ITERATIONS_COUNT);
-
-            ArrayList<Edge> uniqueEdges = graphGenerator.getAllUniqueEdges(graph);
-            KruskalAlgorithm kruskal = new KruskalAlgorithm(graph.length, uniqueEdges.size());
-            kruskal.setEdgeArray(uniqueEdges);
-
-            for(int j = 0; j<ITERATIONS_COUNT;j++){
-                kruskal.KruskalMST();
-            }
-            kruskal.showTime(ITERATIONS_COUNT);
-        }
-
-
 
         JButton goPrim = new JButton("Uruchom algorytm Prima");
         goPrim.setFont(restFont);
@@ -154,18 +117,25 @@ public class Main {
 
         goPrim.addActionListener(e -> {
             //Alg. Prima
-            prim = new Prim(graphGenerator.getPrimVertices(graph));
+            if(graphGenerator != null){
+                if(graph!=null){
+                    prim = new Prim(graphGenerator.getPrimVertices(graph));
+                    prim.setOnFinishedListener(onFinishedListener);
 
-            for(int j = 0; j<ITERATIONS_COUNT;j++){
-                prim.primMST();
+                    for(int j = 0; j<ITERATIONS_COUNT;j++){
+                        prim.primMST();
+                    }
+                    prim.showTime(ITERATIONS_COUNT);
+                } else  titleStep1.setForeground(Color.RED);
             }
-            prim.showTime(ITERATIONS_COUNT);
+
         });
 
         goKruskal.addActionListener(e -> {
             ArrayList<Edge> uniqueEdges = graphGenerator.getAllUniqueEdges(graph);
             KruskalAlgorithm kruskal = new KruskalAlgorithm(graph.length, uniqueEdges.size());
             kruskal.setEdgeArray(uniqueEdges);
+            kruskal.setOnFinishedListener(onFinishedListener);
 
             for(int j = 0; j<ITERATIONS_COUNT;j++){
                 kruskal.KruskalMST();
@@ -192,6 +162,22 @@ public class Main {
         panel.add(titleStep2);
         panel.add(goPrim);
         panel.add(goKruskal);
+        JLabel e = new JLabel();
+        e.setMaximumSize(new Dimension(100,50));
+        panel.add(e);
+        resultLabel = new JLabel();
+        resultLabel.setForeground(Color.BLUE);
+        resultLabel.setFont(restFont);
+        resultLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        resultLabel.setPreferredSize(new Dimension(400,30));
+        panel.add(resultLabel);
+
+        wLabel = new JLabel();
+        wLabel.setForeground(Color.BLUE);
+        wLabel.setFont(restFont);
+        wLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        wLabel.setPreferredSize(new Dimension(400,30));
+        panel.add(wLabel);
 
         mainPanel.add(panel);
         frame.add(mainPanel);
@@ -200,5 +186,6 @@ public class Main {
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
+
 
 }
